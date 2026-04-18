@@ -6,21 +6,31 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) throws JsonProcessingException {
-
+        Scanner scanner = new Scanner(System.in);
         ObjectMapper mapper = new ObjectMapper();
 
-        User newUser = new User("Mike", 30);
+        System.out.println("Enter a JSON string: ");
+        String jsonLine = scanner.nextLine();
 
-        //Serialization (POJO -> JSON String)
-        String json = mapper.writeValueAsString(newUser);
+        //Deserialize
+        Request request = mapper.readValue(jsonLine, Request.class);
+        System.out.println("Request command: " + request.getCommand());
 
-        System.out.println(json);
+        //Mimicking Server logic
+        Robot robot = new Robot();
+        RobotState currentState = new RobotState();
 
-        //Deserialization: (JSON String -> POJO)
-        String jsonInput;
-        System.out.println("Enter any text as a JSON string...");
+        Response response = new Response(
+                "OK",
+                robot,
+                currentState
+        );
 
-        String jsonInput
+        //Serialize Output
+        String jsonResponse = mapper.writerWithDefaultPrettyPrinter()
+                .writeValueAsString(response);
+
+        System.out.println(jsonResponse);
 
 
 
